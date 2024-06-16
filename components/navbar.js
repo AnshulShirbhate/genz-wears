@@ -5,6 +5,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { BsCrosshair } from "react-icons/bs";
 import { CiShoppingCart, CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 import { IoIosCloseCircle } from "react-icons/io";
+import { MdAccountCircle } from "react-icons/md";
 
 const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -81,6 +82,11 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
             <Link href="/contact" onClick={closeMenu} passHref>
               <span className=" hover:text-blue-400 cursor-pointer">
                 Contact Us
+              </span>
+            </Link>
+            <Link href="/login" onClick={closeMenu} passHref>
+              <span className=" hover:text-blue-400 cursor-pointer">
+                <MdAccountCircle size={35}/>
               </span>
             </Link>
             <div className="cursor-pointer">

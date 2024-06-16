@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <div>
       <footer className="text-gray-600 body-font">
-        <div className="container px-5 py-24 mx-auto flex md:items-center lg:items-start justify-center md:flex-row md:flex-nowrap flex-wrap flex-col">
+        <div className="w-11/12 container px-5 py-20 mx-auto flex md:items-center lg:items-start justify-center md:flex-row md:flex-nowrap flex-wrap flex-col">
           <div className="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
             <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
               <Image src="/logo.png" width={50} height={50} className="rounded-full" alt="Logo" />
@@ -86,9 +86,9 @@ const Footer = () => {
           </div>
         </div>
         <div className="bg-gray-100">
-          <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
-            <p className="text-gray-500 text-sm text-center sm:text-left">© 2020 Tailblocks —
-              <a href="https://twitter.com/knyttneve" rel="noopener noreferrer" className="text-gray-600 ml-1" target="_blank">@knyttneve</a>
+          <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row md:w-11/12">
+            <p className="text-gray-500 text-sm text-center sm:text-left">© {new Date().getFullYear()} Gen-Z Wears —
+              <a href="https://www.linkedin.com/in/anshul-shirbhate-590394195/" rel="noopener noreferrer" className="text-gray-600 ml-1" target="_blank">Anshul Shirbhate</a>
             </p>
             <span className="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
               <a className="text-gray-500">
