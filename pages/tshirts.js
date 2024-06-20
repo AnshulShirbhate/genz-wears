@@ -2,6 +2,7 @@ import Link from 'next/link'
 import React from 'react'
 import Product from "../models/product";
 import mongoose from "mongoose";
+import Image from 'next/image';
 
 const Tshirts = ({products}) => {
   return (
@@ -14,7 +15,7 @@ const Tshirts = ({products}) => {
                   <div key={products[item].slug} className="lg:w-1/5 md:w-1/2 p-4 w-full shadow-md m-6">
                     <Link href={`/product/${products[item].slug}`}>
                       <div className="block relative rounded overflow-hidden">
-                        <img alt="ecommerce" className="mx-auto h-[32vh] lg:h-[36vh] block" src={products[item].image} />
+                        <Image width={200} height={200} alt="ecommerce" className="mx-auto h-[32vh] lg:h-[36vh] block" src={products[item].image} />
                       </div>
                       <div className="mt-4">
                         <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">T-shirt</h3>
@@ -30,9 +31,11 @@ const Tshirts = ({products}) => {
                         <div className="mt-3">
                           {products[item].colour.includes("blue") && <button className="border-2 border-gray-300 ml-1 bg-blue-400 rounded-full w-6 h-6 focus:outline-none"></button>}
                           {products[item].colour.includes("red") && <button className="border-2 border-gray-300 ml-1 bg-red-400 rounded-full w-6 h-6 focus:outline-none"></button>}
-                          {products[item].colour.includes("green") && <button className="border-2 border-gray-300 ml-1 bg-blue-400 rounded-full w-6 h-6 focus:outline-none"></button>}
-                          {products[item].colour.includes("yellow") && <button className="border-2 border-gray-300 ml-1 bg-blue-400 rounded-full w-6 h-6 focus:outline-none"></button>}
+                          {products[item].colour.includes("green") && <button className="border-2 border-gray-300 ml-1 bg-green-300 rounded-full w-6 h-6 focus:outline-none"></button>}
+                          {products[item].colour.includes("yellow") && <button className="border-2 border-gray-300 ml-1 bg-yellow-400 rounded-full w-6 h-6 focus:outline-none"></button>}
                           {products[item].colour.includes("black") && <button className="border-2 border-gray-300 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none"></button>}
+                          {products[item].colour.includes("white") && <button className="border-2 border-gray-300 ml-1 bg-white rounded-full w-6 h-6 focus:outline-none"></button>}
+                          {products[item].colour.includes("gray") && <button className="border-2 border-gray-300 ml-1 bg-gray-400 rounded-full w-6 h-6 focus:outline-none"></button>}
                         </div>
                       </div>
                     </Link>

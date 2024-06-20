@@ -3,12 +3,16 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function App({ Component, pageProps }) {
 
   const [cart, setCart] = useState({});
   const [subTotal, setSubTotal] = useState(0)
+  const router = useRouter();
 
   useEffect(()=>{
     try{
@@ -41,6 +45,26 @@ export default function App({ Component, pageProps }) {
     }
     setCart(newCart);
     saveCart(newCart);
+    toast.success('Item added to cart!', {
+      position: "bottom-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
+  }
+
+  
+  const buyNow = (itemCode, qty, price, name, size, variant) => {
+    saveCart({})
+    let newCart = {itemCode: {qty:1, price, name, size, variant}};
+    
+    setCart(newCart);
+    saveCart(newCart);
+    router.push("/checkout");
   }
 
   const clearCart = () =>{
@@ -67,7 +91,7 @@ export default function App({ Component, pageProps }) {
         <meta name="description" content="Gen-Z Wears - Wearables by Gen-Z" />
       </Head>
     <Navbar cart={cart} addToCart={addToCart} clearCart={clearCart} removeFromCart={removeFromCart} subTotal={subTotal} />
-    <Component cart={cart} addToCart={addToCart} clearCart={clearCart} removeFromCart={removeFromCart} subTotal={subTotal} {...pageProps} />;
+    <Component ToastContainer={ToastContainer} buyNow={buyNow} cart={cart} addToCart={addToCart} clearCart={clearCart} removeFromCart={removeFromCart} subTotal={subTotal} {...pageProps} />;
     <Footer/>
   </>)
 }

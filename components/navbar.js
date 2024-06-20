@@ -101,9 +101,10 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
           </div>
 
           {/* Cart Code */}
+          
           <div
             ref={ref}
-            className={`w-72 h-full fixed sideCart top-0 right-0 bg-blue-100 p-10 transition-transform ${Object.keys(cart).length !== 0 ? "translate-x-0" : "translate-x-full"} transform`}
+            className={`w-72 min-h-screen max-h-screen overflow-y-scroll fixed sideCart top-0 right-0 bg-blue-100 p-10 transition-transform ${Object.keys(cart).length !== 0 ? "translate-x-0" : "translate-x-full"} transform no-scrollbar`}
           >
             <h2 className="font-bold text-xl text-center mb-5">
               Shopping Cart
@@ -120,7 +121,7 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
                 return (
                     <li className="my-5" key={k}>
                       <div className="item flex">
-                        <div className="w-2/3 font-semibold">{cart[k].name}</div>
+                        <div className="w-2/3 font-semibold">{cart[k].name} ({cart[k].size}/{cart[k].variant}) - ₹{cart[k].price}</div>
                         <div className="w-1/3 font-semibold flex justify-center items-center">
                           <CiCircleMinus
                             onClick={()=>{removeFromCart(k, 1, cart[k].price, cart[k].name, cart[k].size, cart[k].variant)}}

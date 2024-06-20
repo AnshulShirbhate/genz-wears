@@ -103,7 +103,7 @@ const Checkout = ({cart, addToCart, clearCart, removeFromCart, subTotal}) => {
                     <li className="my-5" key={k}>
                       <div className="item flex">
                        
-                        <div className="w-1/2 text-center font-semibold">{cart[k].name}</div>
+                        <div className="w-1/2 text-center font-semibold">{cart[k].name} ({cart[k].size}/{cart[k].variant}) - ₹{cart[k].price}</div>
                         <div className="w-1/2 font-semibold flex justify-center items-center">
                           <CiCircleMinus
                             onClick={()=>{removeFromCart(k, 1, cart[k].price, cart[k].name, cart[k].size, cart[k].variant)}}

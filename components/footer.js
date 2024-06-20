@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 
@@ -16,19 +17,19 @@ const Footer = () => {
           </div>
           <div className="flex-grow flex flex-wrap md:pl-20 -mb-10 md:mt-0 mt-10 md:text-left text-center">
             <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-              <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">CATEGORIES</h2>
+              <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">SHOP</h2>
               <nav className="list-none mb-10">
                 <li>
-                  <a className="text-gray-600 hover:text-gray-800">First Link</a>
+                  <Link href={"/tshirts"} className="text-gray-600 hover:text-gray-800">T-Shirts</Link>
                 </li>
                 <li>
-                  <a className="text-gray-600 hover:text-gray-800">Second Link</a>
+                  <Link href={"/hoodies"} className="text-gray-600 hover:text-gray-800">Hoodies</Link>
                 </li>
                 <li>
-                  <a className="text-gray-600 hover:text-gray-800">Third Link</a>
+                  <Link href={"/mugs"} className="text-gray-600 hover:text-gray-800">Mugs</Link>
                 </li>
                 <li>
-                  <a className="text-gray-600 hover:text-gray-800">Fourth Link</a>
+                  <Link href={"/pants"} className="text-gray-600 hover:text-gray-800">Pants</Link>
                 </li>
               </nav>
             </div>
@@ -67,19 +68,19 @@ const Footer = () => {
               </nav>
             </div>
             <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-              <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">CATEGORIES</h2>
+              <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">CONTACT</h2>
               <nav className="list-none mb-10">
                 <li>
-                  <a className="text-gray-600 hover:text-gray-800">First Link</a>
+                  <Link href={"/contact"} className="text-gray-600 hover:text-gray-800">Contact Us</Link>
                 </li>
                 <li>
-                  <a className="text-gray-600 hover:text-gray-800">Second Link</a>
+                  <Link href={"https://instagram.com/__anshul__shirbhate"} target="_blank" className="text-gray-600 hover:text-gray-800">Instagram</Link>
                 </li>
                 <li>
-                  <a className="text-gray-600 hover:text-gray-800">Third Link</a>
+                  <Link href={"https://www.linkedin.com/in/anshul-shirbhate-590394195/"} className="text-gray-600 hover:text-gray-800">LinkedIn</Link>
                 </li>
                 <li>
-                  <a className="text-gray-600 hover:text-gray-800">Fourth Link</a>
+                  <span className="text-gray-600 hover:text-gray-800">anshulshirbhate0007@gmail.com</span>
                 </li>
               </nav>
             </div>
@@ -88,7 +89,7 @@ const Footer = () => {
         <div className="bg-gray-100">
           <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row md:w-11/12">
             <p className="text-gray-500 text-sm text-center sm:text-left">© {new Date().getFullYear()} Gen-Z Wears —
-              <a href="https://www.linkedin.com/in/anshul-shirbhate-590394195/" rel="noopener noreferrer" className="text-gray-600 ml-1" target="_blank">Anshul Shirbhate</a>
+              <Link href="https://www.linkedin.com/in/anshul-shirbhate-590394195/" rel="noopener noreferrer" className="text-gray-600 ml-1" target="_blank">Anshul Shirbhate</Link>
             </p>
             <span className="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
               <a className="text-gray-500">
