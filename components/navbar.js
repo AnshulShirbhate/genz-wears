@@ -1,14 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BsCrosshair } from "react-icons/bs";
 import { CiShoppingCart, CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 import { IoIosCloseCircle } from "react-icons/io";
 import { MdAccountCircle } from "react-icons/md";
 
-const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
+const Navbar = ({logout, user, cart, addToCart, removeFromCart, clearCart, subTotal }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdown, setDropdown] = useState(false)
+  
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -84,11 +86,24 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
                 Contact Us
               </span>
             </Link>
-            <Link href="/login" onClick={closeMenu} passHref>
-              <span className=" hover:text-blue-400 cursor-pointer">
-                <MdAccountCircle size={35}/>
+            {user.value && <div>
+              <MdAccountCircle className="" onMouseOver={()=>{setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}} size={35}/>
+              
+              <span onMouseOver={()=>{setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}}>
+              {dropdown && <div className="absolute top-15 right-20 w-36 bg-blue-100 rounded-md px-5 py-3">
+                <ul className="">
+                  <Link href={"/myaccount"}><li className="hover:text-blue-400">My Account</li></Link>
+                  <Link href={"/orders"}><li className="hover:text-blue-400">Orders</li></Link>
+                  <li onClick={logout} className="hover:text-blue-400 cursor-pointer">Logout</li>
+                </ul>
+              </div>}
               </span>
-            </Link>
+            </div>}
+            {!user.value && <Link href="/login" onClick={closeMenu} passHref>
+              <span className=" hover:text-blue-400 cursor-pointer">
+                Login
+              </span>
+            </Link>}
             <div className="cursor-pointer">
               <span
                 onClick={toggleCart}
@@ -104,7 +119,7 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
           
           <div
             ref={ref}
-            className={`w-72 min-h-screen max-h-screen overflow-y-scroll fixed sideCart top-0 right-0 bg-blue-100 p-10 transition-transform ${Object.keys(cart).length !== 0 ? "translate-x-0" : "translate-x-full"} transform no-scrollbar`}
+            className={`w-72 min-h-screen max-h-screen overflow-y-scroll fixed sideCart top-0 right-0 bg-blue-100 p-10 transition-transform translate-x-full transform no-scrollbar`}
           >
             <h2 className="font-bold text-xl text-center mb-5">
               Shopping Cart

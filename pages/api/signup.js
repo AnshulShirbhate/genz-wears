@@ -1,11 +1,16 @@
-import User from "../..//models/user";
+import User from "../../models/user";
 import connectDB from "../../middleware/mongoose";
+var CryptoJS = require("crypto-js");
+
+var jwt = require('jsonwebtoken');
 
 const handler = async (req, res) => {
     if(req.method == "POST"){
-        let u = new User(req.body);
+        const {name, email} = req.body;
+        let u = new User({name, email, password: CryptoJS.AES.encrypt(req.body.password, process.env.AES_SECRET).toString()});
+        var token = jwt.sign({email: email, name: name}, process.env.JWT_SECRET, {expiresIn: '2d'});
         await u.save();
-        res.status(200).json({success: "success"})
+        res.status(200).json({success: "success", token})
     }else{
         res.status(400).json({error: "This method is not allowed"})
     }
