@@ -1,4 +1,16 @@
-export default function handler(req, res) {
-    res.status(200).json({ body: req.body});
-  }
+import Order from "../../models/order";
+import connectDB from "../../middleware/mongoose";
+
+const handler = async(req, res)=> {
+    let order;
+    if(req.body.STATUS == 'TXN_SUCCESS'){
+      order = Order.findOneAndUpdate({orderId: req.body.ORDERID}, {status: "Paid", paymentInfo: JSON.stringify(req.body)})
+    }else if(req.body.STATUS == 'PENDING'){
+      order = Order.findOneAndUpdate({orderId: req.body.ORDERID}, {status: "Pending", paymentInfo: JSON.stringify(req.body)})
+    }
+    res.redirect(`/order?id=${order._id}`, 200)
+    // res.status(200).json({ body: req.body});
+}
+
+export default connectDB(handler)
   

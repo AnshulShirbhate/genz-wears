@@ -49,7 +49,7 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal }) => {
     
     let oid = Math.floor(Math.random() * Date.now());
     let txnToken;
-    const data = { cart, subTotal, oid, email: "email" };
+    const data = { cart, subTotal, oid, email: email, name, address, pincode, phone };
     try {
       let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pretransaction`, {
         method: "POST", // or 'PUT'
@@ -61,6 +61,7 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal }) => {
 
       let txnRes = await a.json();
       txnToken = txnRes.txnToken
+      console.log(txnToken)
 
     } catch (error) {
       console.error("Error:", error);
@@ -84,12 +85,18 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal }) => {
       }
     };
     // initialze configuration using init method
-    window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
-      // after successfully updating configuration, invoke JS Checkout
-      window.Paytm.CheckoutJS.invoke();
-    }).catch(function onError(error) {
-      console.log("error => ", error);
-    });
+
+    if (window.Paytm && window.Paytm.CheckoutJS) {
+      // Initialize configuration using init method
+      window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
+          // After successfully updating configuration, invoke JS Checkout
+          window.Paytm.CheckoutJS.invoke();
+      }).catch(function onError(error) {
+          console.log("error => ", error);
+      });
+    } else {
+        console.error("Paytm SDK not loaded");
+    }
 
   }
 
@@ -230,11 +237,11 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal }) => {
         </ol>
         <span className="total font-semibold text-md flex justify-center mt-5">Sub Total: ₹{subTotal}</span>
         <div className="flex justify-center space-x-2 mt-5">
-          <Link href="/order">
+          {/* <Link href=""> */}
             <button onClick={initiatePayment} disabled={disabled} className="disabled:bg-blue-300 flex text-white bg-blue-400 hover:bg-blue-500 border-0 py-1 px-2 focus:outline-none rounded text-lg">
               Place Order
             </button>
-          </Link>
+          {/* </Link> */}
           <button
             onClick={clearCart}
             className="flex text-white bg-blue-400 border-0 py-1 px-2 focus:outline-none hover:bg-blue-500 rounded text-lg"

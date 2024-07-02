@@ -3,26 +3,34 @@ import connectDB from "../../middleware/mongoose";
 const https = require('https');
 const PaytmChecksum = require('PaytmChecksum');
 
- const handler = async (req, res) => {
-    // if (req.method == "POST") {
-    //     let order = new Order({
-    //         email: req.body.email,
-    //         orderId: req.body.orderId,
-    //         paymentInfo: req.body.paymentInfo,
-    //         products: req.body.cart,
-    //         address: req.body.address,
-    //         amount: req.body.subTotal,
-    //         status: 'Pending',
-    //     })
-    //     await order.save();
-    // }
+ const handler = async (req, res) =>    {
+    if (req.method == "POST") {
+
+        // Check if the cart is tampered with
+
+        //Check if the data is valid or not
+
+        // Check if the stock is available or not
+
+
+        let order = new Order({
+            email: req.body.email,
+            orderId: req.body.oid,
+            paymentInfo: req.body.paymentInfo,
+            products: req.body.cart,
+            address: req.body.address,
+            amount: req.body.subTotal,
+            status: 'Pending',
+        })
+        await order.save();
+    }
 
     var paytmParams = {};
 
     paytmParams.body = {
         "requestType": "Payment",
         "mid": process.env.NEXT_PUBLIC_PAYTM_MID,
-        "websiteName": "YOUR_WEBSITE_NAME",
+        "websiteName": process.env.NEXT_PUBLIC_NAME,
         "orderId": req.body.oid,
         "callbackUrl": `${process.env.NEXT_PUBLIC_HOST}/api/posttransaction`,
         "txnAmount": {
@@ -86,4 +94,4 @@ const PaytmChecksum = require('PaytmChecksum');
 
 }
 
-export default handler
+export default connectDB(handler);

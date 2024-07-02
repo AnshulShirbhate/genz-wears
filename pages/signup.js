@@ -58,9 +58,9 @@ const Signup = () => {
       setTimeout(()=>{
         router.push(process.env.NEXT_PUBLIC_HOST)
       }, 2000)
-      setEmail()
-      setName()
-      setPassword()
+      setEmail('')
+      setName('')
+      setPassword('')
     } catch (e) {
       toast.error('An error occured while creating your account!', {
         position: "bottom-center",

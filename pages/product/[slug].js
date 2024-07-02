@@ -54,7 +54,7 @@ const Slug = ({ buyNow, addToCart, product, variants }) => {
   const [size, setSize] = useState(product.size)
 
   const refreshVariant = (newColour, newSize) => {
-    let url = `${process.env.HOST}/product/${variants[newColour][newSize]["slug"]}`;
+    let url = `${process.env.NEXT_PUBLIC_HOST}/product/${variants[newColour][newSize]["slug"]}`;
     window.location = url;
 
 

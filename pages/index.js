@@ -1,21 +1,14 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
+import Carous from "../components/carousel";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
     <main className="min-h-screen">
-      
-      <div className="flex justify-center mt-10">
-        <Image
-          src="/homebg3.png"
-          className="w-fit"
-          width={1000}
-          height={1000}
-          alt="Home Background"
-        />
-      </div>
+
+      <Carous className=""></Carous>
 
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
