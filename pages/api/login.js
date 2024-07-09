@@ -11,8 +11,8 @@ const handler = async (req, res) => {
             var bytes  = CryptoJS.AES.decrypt(user.password, process.env.AES_SECRET);
             var password = bytes.toString(CryptoJS.enc.Utf8);
             if(req.body.email === user.email && password === req.body.password){
-                var token = jwt.sign({email: user.email, name: user.name}, process.env.JWT_SECRET, {expiresIn: '2d'});
-                res.status(200).json({success: true, token});
+                var usertoken = jwt.sign({email: user.email, name: user.name}, process.env.JWT_SECRET, {expiresIn: '2d'});
+                res.status(200).json({success: true, token: usertoken, email: user.email});
             }else{
                 res.status(200).json({success: false, error: "Invalid Credentials"});
             }

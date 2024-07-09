@@ -13,36 +13,40 @@ const Slug = ({ buyNow, addToCart, product, variants }) => {
 
   // const { slug } = router.query;
 
-  const [pin, setPin] = useState();
+  const [pin, setPin] = useState('');
   const [service, setService] = useState();
 
   const checkServiceability = async () => {
-    let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`);
-    let pinJson = await pins.json();
-    if (pinJson.includes(parseInt(pin))) {
-      setService(true);
-      toast.success('Your pincode is serviceable', {
-        position: "bottom-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        });
-    } else {
-      setService(false);
-      toast.warn('Sorry! pincode is not serviceable', {
-        position: "bottom-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        });
+    try{
+      let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`);
+      let pinJson = await pins.json();
+      if (Object.keys(pinJson).includes(pin)) {
+        setService(true);
+        toast.success('Your pincode is serviceable', {
+          position: "bottom-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
+      } else {
+        setService(false);
+        toast.warn('Sorry! pincode is not serviceable', {
+          position: "bottom-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
+      }
+    }catch(e){
+      console.log(e)
     }
   }
 

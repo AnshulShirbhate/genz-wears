@@ -14,7 +14,7 @@ const Signup = () => {
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    if(localStorage.getItem("token")){
+    if(localStorage.getItem("myuser")){
       router.push("/")
     }
   }, [])
@@ -54,7 +54,7 @@ const Signup = () => {
         progress: undefined,
         theme: "light",
       });
-      localStorage.setItem("token", result.token)
+      localStorage.setItem("myuser", JSON.stringify({token: result.token, email: result.email}))
       setTimeout(()=>{
         router.push(process.env.NEXT_PUBLIC_HOST)
       }, 2000)

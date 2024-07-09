@@ -8,9 +8,9 @@ const handler = async (req, res) => {
     if(req.method == "POST"){
         const {name, email} = req.body;
         let u = new User({name, email, password: CryptoJS.AES.encrypt(req.body.password, process.env.AES_SECRET).toString()});
-        var token = jwt.sign({email: email, name: name}, process.env.JWT_SECRET, {expiresIn: '2d'});
+        var usertoken = jwt.sign({email: email, name: name}, process.env.JWT_SECRET, {expiresIn: '2d'});
         await u.save();
-        res.status(200).json({success: "success", token})
+        res.status(200).json({success: "success", token: usertoken, email: req.body.email})
     }else{
         res.status(400).json({error: "This method is not allowed"})
     }

@@ -1,11 +1,18 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import Script from "next/script";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 import { IoIosCloseCircle } from "react-icons/io";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal }) => {
+const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }) => {
+  const router = useRouter()
+
+  
+  
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [address, setAddress] = useState('')
@@ -14,6 +21,27 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal }) => {
   const [state, setState] = useState('')
   const [pincode, setPincode] = useState('')
   const [disabled, setDisabled] = useState(true)
+
+  useEffect(() => {
+    const fetchPincodes = async () =>{
+      if(!localStorage.getItem("myuser")){
+        router.push("/login")
+      }
+      let response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`);
+      let result = await response.json();
+      if(Object.keys(result).includes(pincode)){
+        setCity(result[pincode][0])
+        setState(result[pincode][1])
+      }else{
+        setCity('')
+        setState('')
+      }
+    }
+    fetchPincodes();
+    if(user.email){
+      setEmail(user.email)
+    }
+  }, [pincode])
 
   const handleChange = (e) => {
     if (e.target.name == "name") {
@@ -28,17 +56,11 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal }) => {
     if (e.target.name == "phone") {
       setPhone(e.target.value)
     }
-    if (e.target.name == "city") {
-      setCity(e.target.value)
-    }
-    if (e.target.name == "state") {
-      setState(e.target.value)
-    }
     if (e.target.name == "pincode") {
       setPincode(e.target.value)
     }
-    if (name.length > 3 && email.length > 3 && address.length > 3 && phone.length > 3 && city.length > 3 && state.length > 3
-      && pincode.length > 3) {
+    if (name.length > 3 && address.length > 3 && phone.length > 3 && city.length > 3 && state.length > 3
+      && pincode.length > 3 && Object.keys(cart).length >0) {
       setDisabled(false);
     } else {
       setDisabled(true);
@@ -49,6 +71,7 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal }) => {
     
     let oid = Math.floor(Math.random() * Date.now());
     let txnToken;
+    let txnRes
     const data = { cart, subTotal, oid, email: email, name, address, pincode, phone };
     try {
       let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pretransaction`, {
@@ -59,12 +82,16 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal }) => {
         body: JSON.stringify(data),
       });
 
-      let txnRes = await a.json();
-      txnToken = txnRes.txnToken
-      console.log(txnToken)
-
+      txnRes = await a.json();
+      console.log(txnRes)
+      console.log("Test")
+      if(txnRes.success){
+        txnToken = txnRes.txnToken
+      }
+      
     } catch (error) {
       console.error("Error:", error);
+      return
     }
 
     var config = {
@@ -85,23 +112,47 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal }) => {
       }
     };
     // initialze configuration using init method
-
-    if (window.Paytm && window.Paytm.CheckoutJS) {
-      // Initialize configuration using init method
-      window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
-          // After successfully updating configuration, invoke JS Checkout
-          window.Paytm.CheckoutJS.invoke();
-      }).catch(function onError(error) {
-          console.log("error => ", error);
-      });
+    if(txnRes.success){
+      if (window.Paytm && window.Paytm.CheckoutJS) {
+        // Initialize configuration using init method
+        window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
+            // After successfully updating configuration, invoke JS Checkout
+            window.Paytm.CheckoutJS.invoke();
+        }).catch(function onError(error) {
+            console.log("error => ", error);
+        });
+      } else {
+          console.error("Paytm SDK not loaded");
+      }
     } else {
-        console.error("Paytm SDK not loaded");
+      clearCart()
+      toast.error('Error occured while placing order! Please refresh and try again.', {
+        position: "bottom-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
     }
 
   }
 
   return (
     <div className="container m-auto">
+      <ToastContainer
+          position="bottom-center"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"/>
       <Head>
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" />
       </Head>
@@ -126,7 +177,16 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal }) => {
           <label htmlFor="email" className="leading-7 text-sm text-gray-600">
             Email
           </label>
-          <input
+          {user.value? 
+            <input
+            value={email}
+            type="email"
+            id="email"
+            name="email"
+            readOnly={true}
+            className="w-full bg-white rounded border border-blue-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+            />:
+            <input
             onChange={handleChange}
             value={email}
             type="email"
@@ -134,6 +194,8 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal }) => {
             name="email"
             className="w-full bg-white rounded border border-blue-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
           />
+          }
+          
         </div>
       </div>
       <div className="mx-auto w-3/4">

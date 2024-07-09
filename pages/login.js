@@ -13,7 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    if(localStorage.getItem("token")){
+    if(localStorage.getItem("myuser")){
       router.push(process.env.NEXT_PUBLIC_HOST)
     }
   }, [])
@@ -42,7 +42,7 @@ const Login = () => {
       
       const result = await res.json();
       if(result.success){
-        localStorage.setItem("token", result.token)
+        localStorage.setItem("myuser", JSON.stringify({token: result.token, email: result.email}))
         setEmail("")
         setPassword("")
         toast.success('Logged In', {

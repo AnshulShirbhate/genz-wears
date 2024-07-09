@@ -1,9 +1,17 @@
 import mongoose from "mongoose";
 import Order from "../models/order";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
-const OrderPage = ({order}) => {
+const OrderPage = ({order, clearCart}) => {
+  const router = useRouter()
+  useEffect(() => {
+    if(router.query.clearCart == 1){
+      clearCart()
+    }
+  }, [])
+
   return (
     <div>
       <section className="text-gray-600 body-font overflow-hidden">
