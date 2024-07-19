@@ -43,6 +43,16 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }
     }
   }, [pincode])
 
+  useEffect(() => {
+    if (name.length > 3 && address.length > 3 && phone.length > 8 && city.length > 3 && state.length > 3
+      && pincode.length >5  && Object.keys(cart).length >0) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [name, phone, address, pincode, cart])
+  
+
   const handleChange = (e) => {
     if (e.target.name == "name") {
       setName(e.target.value)
@@ -59,12 +69,7 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }
     if (e.target.name == "pincode") {
       setPincode(e.target.value)
     }
-    if (name.length > 3 && address.length > 3 && phone.length > 3 && city.length > 3 && state.length > 3
-      && pincode.length > 3 && Object.keys(cart).length >0) {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
-    }
+    
   }
 
   const initiatePayment = async () => {
@@ -83,10 +88,20 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }
       });
 
       txnRes = await a.json();
-      console.log(txnRes)
-      console.log("Test")
       if(txnRes.success){
         txnToken = txnRes.txnToken
+      }else{
+        toast.error(txnRes.error, {
+          position: "bottom-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
+          return;
       }
       
     } catch (error) {
@@ -136,6 +151,7 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }
         progress: undefined,
         theme: "light",
         });
+        console.log("This was also called")
     }
 
   }
@@ -220,6 +236,7 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }
             type="tel"
             id="phone"
             name="phone"
+            placeholder="Your 10 digit phone number"
             className="w-full bg-white rounded border border-blue-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
           />
         </div>

@@ -28,6 +28,14 @@ const PaytmChecksum = require('PaytmChecksum');
         }
 
         //Check if the data is valid or not
+        if(req.body.phone.length !== 10){
+            res.status(200).json({success:false, "error": "Enter a valid phone number"})
+            return;
+        }
+        if(req.body.pincode.length !== 6){
+            res.status(200).json({success:false, "error": "Enter a valid pincode"})
+            return;
+        }
 
         // Check if the stock is available or not
 

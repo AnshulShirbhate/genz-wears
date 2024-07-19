@@ -6,11 +6,12 @@ import { BsCrosshair } from "react-icons/bs";
 import { CiShoppingCart, CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 import { IoIosCloseCircle } from "react-icons/io";
 import { MdAccountCircle } from "react-icons/md";
+import { useRouter } from "next/router";
 
 const Navbar = ({logout, user, cart, addToCart, removeFromCart, clearCart, subTotal }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdown, setDropdown] = useState(false)
-  
+
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -157,7 +158,7 @@ const Navbar = ({logout, user, cart, addToCart, removeFromCart, clearCart, subTo
             <span className="total font-semibold text-md flex justify-center mt-5">Sub Total: ₹{subTotal}</span>
             <div className="flex justify-center space-x-2 mt-10">
               <Link href="/checkout">
-              <button onClick={toggleCart} className="flex text-white bg-blue-300 border-0 py-1 px-2 focus:outline-none hover:bg-blue-400 rounded text-lg">
+              <button disabled={Object.keys(cart).length === 0} onClick={toggleCart} className="disabled:bg-blue-300 flex text-white bg-blue-300 border-0 py-1 px-2 focus:outline-none hover:bg-blue-400 rounded text-lg">
                 Checkout
               </button>
               </Link>
