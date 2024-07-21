@@ -1,17 +1,13 @@
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import React, { useEffect, useState } from "react";
 import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
-import { IoIosCloseCircle } from "react-icons/io";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }) => {
   const router = useRouter()
-
-  
   
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -21,6 +17,8 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }
   const [state, setState] = useState('')
   const [pincode, setPincode] = useState('')
   const [disabled, setDisabled] = useState(true)
+
+  
 
   useEffect(() => {
     const fetchPincodes = async () =>{
@@ -41,16 +39,41 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }
     if(user.email){
       setEmail(user.email)
     }
-  }, [pincode])
+  }, [user.email, router, router.query, pincode])
 
   useEffect(() => {
-    if (name.length > 3 && address.length > 3 && phone.length > 8 && city.length > 3 && state.length > 3
-      && pincode.length >5  && Object.keys(cart).length >0) {
+    const fun = async()=>{
+      let token = {token: user.value}
+      let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getuser`, {
+        method: "POST", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(token),
+      });
+      a = await a.json();
+      console.log(a)
+      setName(a.name);
+      setAddress(a.address);
+      setPhone(a.phoneno);
+      setPincode(a.pincode);
+    }
+    fun()
+  }, [user.value])
+  
+
+
+  useEffect(() => {
+    if (name.length > 3 && address.length > 3 && phone.length == 10 && city.length > 3 && state.length > 3
+      && pincode.length > 5  && Object.keys(cart).length >0) {
       setDisabled(false);
     } else {
       setDisabled(true);
     }
-  }, [name, phone, address, pincode, cart])
+    if(user.email){
+      setEmail(user.email)
+    }
+  }, [city.length, state.length, user.email, name, phone, address, pincode, cart])
   
 
   const handleChange = (e) => {
@@ -77,7 +100,7 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }
     let oid = Math.floor(Math.random() * Date.now());
     let txnToken;
     let txnRes
-    const data = { cart, subTotal, oid, email: email, name, address, pincode, phone };
+    const data = { cart, subTotal, oid, email: email, name: name, address: address, pincode: pincode, phone: phone ,city: city, state: state};
     try {
       let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pretransaction`, {
         method: "POST", // or 'PUT'

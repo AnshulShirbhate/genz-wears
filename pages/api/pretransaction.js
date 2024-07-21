@@ -28,7 +28,7 @@ const PaytmChecksum = require('PaytmChecksum');
         }
 
         //Check if the data is valid or not
-        if(req.body.phone.length !== 10){
+        if(req.body.phone.length !== 10 || isNaN(req.body.phone)){
             res.status(200).json({success:false, "error": "Enter a valid phone number"})
             return;
         }
@@ -46,6 +46,10 @@ const PaytmChecksum = require('PaytmChecksum');
             paymentInfo: req.body.paymentInfo,
             products: req.body.cart,
             address: req.body.address,
+            phoneno: req.body.phone,
+            state: req.body.state,
+            city: req.body.city,
+            pincode: req.body.pincode,
             amount: req.body.subTotal,
             status: 'Pending',
         })
