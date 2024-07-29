@@ -82,6 +82,9 @@ const Navbar = ({logout, user, cart, addToCart, removeFromCart, clearCart, subTo
             <Link href="/mugs" onClick={closeMenu} passHref>
               <span className=" hover:text-blue-400 cursor-pointer">Mugs</span>
             </Link>
+            <Link href="/shoes" onClick={closeMenu} passHref>
+              <span className=" hover:text-blue-400 cursor-pointer">Shoes</span>
+            </Link>
             <Link href="/contact" onClick={closeMenu} passHref>
               <span className=" hover:text-blue-400 cursor-pointer">
                 Contact Us

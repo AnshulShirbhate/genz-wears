@@ -29,7 +29,7 @@ const Footer = () => {
                   <Link href={"/mugs"} className="text-gray-600 hover:text-gray-800">Mugs</Link>
                 </li>
                 <li>
-                  <Link href={"/pants"} className="text-gray-600 hover:text-gray-800">Pants</Link>
+                  <Link href={"/shoes"} className="text-gray-600 hover:text-gray-800">Shoes</Link>
                 </li>
               </nav>
             </div>

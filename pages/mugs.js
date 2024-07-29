@@ -7,10 +7,10 @@ import Image from 'next/image';
 const Mugs = ({products}) => {
   return (
     <div>
-      <section className="text-gray-600 body-font">
+      <section className="text-gray-600 body-font ">
         <div className="container py-5 mx-auto">
           <div className="flex flex-wrap m-8 text-center justify-center">
-            {Object.keys(products).length == 0 && <p>Mugs are currently out of stock. More stock comming soon. Stay Tuned!</p>}
+            {Object.keys(products).length == 0 && <p className='flex items-center justify-center h-[50vh]'>Mugs are currently out of stock. More stock comming soon. Stay Tuned!</p>}
             {Object.keys(products).map((item) => {
               return(
                   <div key={products[item].slug} className="lg:w-1/5 md:w-1/2 p-4 w-full shadow-md m-6">
