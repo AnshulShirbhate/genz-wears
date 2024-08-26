@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import React, {useState, useEffect} from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,7 +16,7 @@ const Login = () => {
     if(localStorage.getItem("myuser")){
       router.push(process.env.NEXT_PUBLIC_HOST)
     }
-  }, [])
+  }, [router])
   
 
   const handleChange = (e) => {

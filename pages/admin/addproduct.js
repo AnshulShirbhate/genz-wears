@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Slug = (props) => {
+const AddProduct = ({user}) => {
+    const router = useRouter()
 
     const [title, setTitle] = useState('')
-    const [pslug, setSlug] = useState('')
+    const [slug, setSlug] = useState('')
     const [category, setCategory] = useState('')
     const [size, setSize] = useState('')
     const [colour, setColour] = useState('')
@@ -18,7 +19,9 @@ const Slug = (props) => {
     const handleChange = (e) => {
         if (e.target.name == 'title') {
             setTitle(e.target.value)
-        } else if (e.target.name == 'category') {
+        }else if (e.target.name == 'slug') {
+            setSlug(e.target.value)
+        }else if (e.target.name == 'category') {
             setCategory(e.target.value)
         } else if (e.target.name == 'size') {
             setSize(e.target.value)
@@ -35,44 +38,18 @@ const Slug = (props) => {
         }
     }
 
-    const router = useRouter()
-    // const { slug } = router.query
-    const slug = props.slug
     useEffect(() => {
-        let user = JSON.parse(localStorage.getItem("myuser"));
         if(user.email != 'admin@genzwears.com'){
             router.push(`${process.env.NEXT_PUBLIC_HOST}`)
         }
         
-        const fetchProduct = async () => {
-            let data = { slug }
-            let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getSpecificProduct`, {
-                method: "POST", // or 'PUT'
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
-            a = await a.json();
-            setTitle(a.product.title)
-            setSlug(a.product.slug)
-            setCategory(a.product.category)
-            setSize(a.product.size)
-            setColour(a.product.colour)
-            setPrice(a.product.price)
-            setAvailableQuantity(a.product.availableQuantity)
-            setImage(a.product.image)
-            setDescription(a.product.description)
-        }
-        fetchProduct()
-    }, [router,slug])
+    }, [router, user.email])
 
 
-    const updateProductDetails = async () => {
-        let user = JSON.parse(localStorage.getItem("myuser"))
-        let data = {token: user.token, title, category, size, colour, price, availableQuantity, image, description}
+    const addProduct = async () => {
+        let data = {token: user.value, title, category, size, colour, price, availableQuantity, image, description,slug }
 
-        let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/updateProducts`, {
+        let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/addproduct`, {
             method: "POST", // or 'PUT'
             headers: {
                 "Content-Type": "application/json",
@@ -81,7 +58,7 @@ const Slug = (props) => {
         });
         a = await a.json();
         if (a.success) {
-            toast.success("Product Updated!", {
+            toast.success("Product Added!", {
                 position: "bottom-center",
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -120,11 +97,11 @@ const Slug = (props) => {
                 draggable
                 pauseOnHover
                 theme="light" />
-            <div className="bg-white border border-4 rounded-lg shadow relative m-10">
+            <div className="bg-white border-4 rounded-lg shadow relative m-10">
 
                 <div className="flex items-start justify-between p-5 border-b rounded-t">
                     <h3 className="text-xl font-semibold">
-                        Edit product
+                        Add Product
                     </h3>
                 </div>
 
@@ -137,7 +114,7 @@ const Slug = (props) => {
                             </div>
                             <div className="col-span-6 sm:col-span-3">
                                 <label htmlFor="slug" className="text-sm font-medium text-gray-900 block mb-2">Slug</label>
-                                <input value={pslug} readOnly={true} type="text" name="slug" id="slug" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="type-category-colour-size" required />
+                                <input value={slug} onChange={handleChange} type="text" name="slug" id="slug" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="type-category-colour-size" required />
                             </div>
                             <div className="col-span-6 sm:col-span-3">
                                 <label htmlFor="category" className="text-sm font-medium text-gray-900 block mb-2">Category</label>
@@ -161,7 +138,7 @@ const Slug = (props) => {
                             </div>
                             <div className="col-span-6 sm:col-span-3">
                                 <label htmlFor="image" className="text-sm font-medium text-gray-900 block mb-2">Image</label>
-                                <input value={image} onChange={handleChange} type="text" name="image" id="image" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="/thirt/plaintshirt.jpg" required />
+                                <input value={image} onChange={handleChange} type="text" name="image" id="image" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="/thirts/plaintshirt.jpg" required />
                             </div>
                             <div className="col-span-full">
                                 <label htmlFor="description" className="text-sm font-medium text-gray-900 block mb-2">Description</label>
@@ -172,7 +149,7 @@ const Slug = (props) => {
                 </div>
 
                 <div className="p-6 border-t border-gray-200 rounded-b">
-                    <button onClick={updateProductDetails} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center" type="submit">Update</button>
+                    <button onClick={addProduct} className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center" type="submit">Add</button>
                 </div>
 
             </div>
@@ -180,9 +157,4 @@ const Slug = (props) => {
     )
 }
 
-export default Slug
-
-
-export async function getServerSideProps(context){
-    return {props: {slug: context.query.slug}}
-}
+export default AddProduct

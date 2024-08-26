@@ -98,6 +98,7 @@ const Navbar = ({logout, user, cart, addToCart, removeFromCart, clearCart, subTo
                 <ul className="">
                   <Link href={"/myaccount"}><li className="hover:text-blue-400">My Account</li></Link>
                   <Link href={"/orders"}><li className="hover:text-blue-400">Orders</li></Link>
+                  {user.email == 'admin@genzwears.com' && < Link href={"/admin"}><li className="hover:text-blue-400">Admin Panel</li></Link>}
                   <li onClick={logout} className="hover:text-blue-400 cursor-pointer">Logout</li>
                 </ul>
               </div>}

@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     phoneno: {type: String,  default:''},
 }, {timestamps: true});
 
-mongoose.models = {}
+// mongoose.models = {}
+// export default mongoose.model("User", userSchema);
 //OR
-// export default mongoose.models.User || mongoose.model("User", userSchema);
-export default mongoose.model("User", userSchema);
+export default mongoose.models.User || mongoose.model("User", userSchema);

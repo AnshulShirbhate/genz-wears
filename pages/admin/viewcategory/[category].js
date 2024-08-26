@@ -1,10 +1,17 @@
 import mongoose from 'mongoose'
 import Product from '../../../models/product'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 const Category = ({products}) => {
+  useEffect(() => {
+    let user = JSON.parse(localStorage.getItem("myuser"));
+    if(user.email != 'admin@genzwears.com'){
+        router.push(`${process.env.NEXT_PUBLIC_HOST}`)
+    }
+  }, [])
+  
   return (
     <section className="text-gray-600 body-font">
         <div className="container py-5 mx-auto">
@@ -17,7 +24,7 @@ const Category = ({products}) => {
                         <Image width={200} height={200} alt="ecommerce" className="mx-auto h-[32vh] lg:h-[36vh] block" src={products[item].image} />
                       </div>
                       <div className="mt-4">
-                        <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">T-shirt</h3>
+                        <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{products[item].category}</h3>
                         <h2 className="text-gray-900 title-font text-lg font-medium">{products[item].title}</h2>
                         <p className="mt-1 mb-2">₹{products[item].price}</p>
                         <div>

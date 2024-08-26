@@ -1,17 +1,24 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
+
 const Dashboard = () => {
+    const router = useRouter()
     const [categories, setCategories] = useState([])
 
     useEffect(() => {
+        let user = JSON.parse(localStorage.getItem("myuser"));
+        if(user.email != 'admin@genzwears.com'){
+            router.push(`${process.env.NEXT_PUBLIC_HOST}`)
+        }
         const getCategories = async () => {
             let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getProductCategories`);
             res = await res.json();
             setCategories(res)
         }
         getCategories()
-    }, [])
+    }, [router])
 
 
     return (
@@ -37,7 +44,7 @@ const Dashboard = () => {
                             )
                         })}
                     </div>
-                    <button className="flex mx-auto mt-16 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Button</button>
+                    <Link href={"/admin/addproduct"}><button className="flex mx-auto mt-16 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Add New</button></Link>
                 </div>
             </section>
         </div>

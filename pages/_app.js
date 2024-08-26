@@ -19,12 +19,16 @@ export default function App({ Component, pageProps }) {
   const router = useRouter();
 
   useEffect(()=>{
+
+    // Top loading bar logic
     router.events.on('routeChangeStart', ()=>{
       setProgress(40)
     });
     router.events.on('routeChangeComplete', ()=>{
       setProgress(100)
     });
+
+    
     try{
       if(localStorage.getItem("cart")){
         setCart(JSON.parse(localStorage.getItem("cart")))
@@ -39,7 +43,7 @@ export default function App({ Component, pageProps }) {
       setUser({value: myuser.token, email: myuser.email})
     }
     setKey(Math.random())
-  }, [router.query])
+  }, [router.query, router.events])
 
   const saveCart = (myCart) => {
     localStorage.setItem("cart", JSON.stringify(myCart));
