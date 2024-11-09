@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from 'next/router'
 import Link from "next/link";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Orders = () => {
@@ -18,18 +20,47 @@ const Orders = () => {
         body: JSON.stringify({ token: myuser.token }),
       });
       let res = await a.json();
-      setOrders(res.orders.reverse())
-      console.log(res)
+      if(res.success){
+        setOrders(res.orders.reverse())
+      } else {
+        toast.error(res.message, {
+          position: "bottom-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        localStorage.removeItem("myuser")
+        setTimeout(()=>{
+          router.push("/")
+        }, 2000)
+      }
     }
-    if (!localStorage.getItem("myuser")) {
+    if(!localStorage.getItem("myuser")){
       router.push("/")
     } else {
       fetchOrders()
     }
-  }, [router.query])
+    
+  }, [router.query, router])
 
   return (
     <div>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="container w-11/12 my-10 mx-auto">
         <h1 className="font-bold text-2xl text-center mb-5">My Orders</h1>
         <div className="items flex flex-col">
