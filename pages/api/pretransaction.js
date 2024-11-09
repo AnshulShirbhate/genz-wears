@@ -1,11 +1,13 @@
 import Order from "../../models/order";
 import connectDB from "../../middleware/mongoose";
 import Product from "../../models/product";
+import { useRouter } from "next/router";
 const https = require('https');
 const PaytmChecksum = require('PaytmChecksum');
 
- const handler = async (req, res) =>    {
+const handler = async (req, res) =>    {
     if (req.method == "POST") {
+        // window.location()
 
         // Check if the cart is tampered with
         let product, sumTotal=0;
@@ -54,6 +56,14 @@ const PaytmChecksum = require('PaytmChecksum');
             status: 'Pending',
         })
         await order.save();
+        let foundOrder = await  Order.findOneAndUpdate({orderId: req.body.oid}, {status: "Paid", paymentInfo: JSON.stringify(req.body)})
+        let products = foundOrder.products
+        for(let slug in products){
+            await Product.findOneAndUpdate({"slug":  slug}, {$inc: {"availableQuantity": -products[slug].qty}})
+        }
+        res.status(200).json({'success': true, 'url': `/order?id=${foundOrder._id}&clearCart=1`})
+        return;
+        // window.location.assign(`/order?id=${foundOrder._id}&clearCart=1`);
     }
 
     var paytmParams = {};

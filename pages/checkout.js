@@ -52,7 +52,6 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }
         body: JSON.stringify(token),
       });
       a = await a.json();
-      console.log(a)
       setName(a.name);
       setAddress(a.address);
       setPhone(a.phoneno);
@@ -109,12 +108,15 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }
         },
         body: JSON.stringify(data),
       });
-
+     
       txnRes = await a.json();
       if(txnRes.success){
-        txnToken = txnRes.txnToken
+        // console.log("Reached here")
+        // console.log(txnRes.url)
+        router.push(`${process.env.NEXT_PUBLIC_HOST}/${txnRes.url}`)
+        // txnToken = txnRes.txnToken
       }else{
-        toast.error(txnRes.error, {
+        toast.error("Something went wrong in the server!", {
           position: "bottom-center",
           autoClose: 2000,
           hideProgressBar: false,
@@ -132,50 +134,49 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }
       return
     }
 
-    var config = {
-      "root": "",
-      "flow": "DEFAULT",
-      "data": {
-        "orderId": oid, /* update order id */
-        "token": txnToken, /* update token value */
-        "tokenType": "TXN_TOKEN",
-        "amount": subTotal /* update amount */
-      },
-      "handler": {
-        "notifyMerchant": function (eventName, data) {
-          console.log("notifyMerchant handler function called");
-          console.log("eventName => ", eventName);
-          console.log("data => ", data);
-        }
-      }
-    };
-    // initialze configuration using init method
-    if(txnRes.success){
-      if (window.Paytm && window.Paytm.CheckoutJS) {
-        // Initialize configuration using init method
-        window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
-            // After successfully updating configuration, invoke JS Checkout
-            window.Paytm.CheckoutJS.invoke();
-        }).catch(function onError(error) {
-            console.log("error => ", error);
-        });
-      } else {
-          console.error("Paytm SDK not loaded");
-      }
-    } else {
-      clearCart()
-      toast.error('Error occured while placing order! Please refresh and try again.', {
-        position: "bottom-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        });
-        console.log("This was also called")
-    }
+    // var config = {
+    //   "root": "",
+    //   "flow": "DEFAULT",
+    //   "data": {
+    //     "orderId": oid, /* update order id */
+    //     "token": txnToken, /* update token value */
+    //     "tokenType": "TXN_TOKEN",
+    //     "amount": subTotal /* update amount */
+    //   },
+    //   "handler": {
+    //     "notifyMerchant": function (eventName, data) {
+    //       console.log("notifyMerchant handler function called");
+    //       console.log("eventName => ", eventName);
+    //       console.log("data => ", data);
+    //     }
+    //   }
+    // };
+    // // initialze configuration using init method
+    // if(txnRes.success){
+    //   if (window.Paytm && window.Paytm.CheckoutJS) {
+    //     // Initialize configuration using init method
+    //     window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
+    //         // After successfully updating configuration, invoke JS Checkout
+    //         window.Paytm.CheckoutJS.invoke();
+    //     }).catch(function onError(error) {
+    //         console.log("error => ", error);
+    //     });
+    //   } else {
+    //       console.error("Paytm SDK not loaded");
+    //   }
+    // } else {
+    //   clearCart()
+    //   toast.error('Error occured while placing order! Please refresh and try again.', {
+    //     position: "bottom-center",
+    //     autoClose: 2000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "light",
+    //     });
+    // }
 
   }
 

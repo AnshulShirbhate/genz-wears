@@ -10,7 +10,7 @@ const handler = async(req, res)=> {
       for(let slug in products){
         await Product.findOneAndUpdate({"slug":  slug}, {$inc: {"availableQuantity": -products[slug].qty}})
       }
-      Order.findOneAndUpdate({})
+      // Order.findOneAndUpdate({})
     }else if(req.body.STATUS == 'PENDING'){
       order = Order.findOneAndUpdate({orderId: req.body.ORDERID}, {status: "Pending", paymentInfo: JSON.stringify(req.body)})
     }
