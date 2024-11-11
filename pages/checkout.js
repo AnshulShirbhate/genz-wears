@@ -116,7 +116,7 @@ const Checkout = ({ cart, addToCart, clearCart, removeFromCart, subTotal, user }
         router.push(`${process.env.NEXT_PUBLIC_HOST}/${txnRes.url}`)
         // txnToken = txnRes.txnToken
       }else{
-        toast.error("Something went wrong in the server!", {
+        toast.error(txnRes.error, {
           position: "bottom-center",
           autoClose: 2000,
           hideProgressBar: false,
