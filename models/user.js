@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     address: {type: String, default:''},
     pincode: {type: String,  default:''},
     phoneno: {type: String,  default:''},
+    isAdmin: {type: Boolean, default:false}
 }, {timestamps: true});
 
 // mongoose.models = {}

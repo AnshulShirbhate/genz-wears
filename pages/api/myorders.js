@@ -8,7 +8,7 @@ const handler = async (req, res) => {
         var decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
         let orders = await Order.find({email: decoded.email});
         res.status(200).json({'success': true, orders});
-    } catch {
+    } catch{
         res.status(400).json({'success': false, 'message': "Login Again!"});
     }
 }

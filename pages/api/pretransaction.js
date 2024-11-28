@@ -3,67 +3,68 @@ import connectDB from "../../middleware/mongoose";
 import Product from "../../models/product";
 import { useRouter } from "next/router";
 const https = require('https');
-const PaytmChecksum = require('PaytmChecksum');
+// const PaytmChecksum = require('PaytmChecksum');
 
 const handler = async (req, res) =>    {
     if (req.method == "POST") {
-        // window.location()
-
-        // Check if the cart is tampered with
-        let product, sumTotal=0;
-        let cart = req.body.cart;
-        for(let item in req.body.cart){
-            sumTotal+=cart[item].price*cart[item].qty;
-            product = await Product.findOne({"slug":item})
-            if(product.availableQuantity < cart[item].qty){
-                res.status(200).json({success:false, "error": `${cart[item].name} have only ${cart[item].qty} items left in stock.`})
-                return;
+        try {
+            // Check if the cart is tampered with
+            let product, sumTotal=0;
+            let cart = req.body.cart;
+            for(let item in req.body.cart){
+                sumTotal+=cart[item].price*cart[item].qty;
+                product = await Product.findOne({"slug":item})
+                if(product.availableQuantity < cart[item].qty){
+                    res.status(200).json({success:false, "error": `${cart[item].name} have only ${cart[item].qty} items left in stock.`})
+                    return;
+                }
+                if(product.price != cart[item].price){
+                    res.status(200).json({success:false, "error": "The price of some items in your cart has changed! Please try again."})
+                    return;
+                }
             }
-            if(product.price != cart[item].price){
+            if(sumTotal != req.body.subTotal){
                 res.status(200).json({success:false, "error": "The price of some items in your cart has changed! Please try again."})
                 return;
             }
-        }
-        if(sumTotal != req.body.subTotal){
-            res.status(200).json({success:false, "error": "The price of some items in your cart has changed! Please try again."})
+    
+            //Check if the data is valid or not
+            if(req.body.phone.length !== 10 || isNaN(req.body.phone)){
+                res.status(200).json({success:false, "error": "Enter a valid phone number"})
+                return;
+            }
+            if(req.body.pincode.length !== 6){
+                res.status(200).json({success:false, "error": "Enter a valid pincode"})
+                return;
+            }
+    
+            // Check if the stock is available or not
+    
+    
+            let order = new Order({
+                email: req.body.email,
+                orderId: req.body.oid,
+                paymentInfo: req.body.paymentInfo,
+                products: req.body.cart,
+                address: req.body.address,
+                phoneno: req.body.phone,
+                state: req.body.state,
+                city: req.body.city,
+                pincode: req.body.pincode,
+                amount: req.body.subTotal,
+                status: 'Pending',
+            })
+            await order.save();
+            let foundOrder = await  Order.findOneAndUpdate({orderId: req.body.oid}, {status: "Paid", paymentInfo: JSON.stringify(req.body)})
+            let products = foundOrder.products
+            for(let slug in products){
+                await Product.findOneAndUpdate({"slug":  slug}, {$inc: {"availableQuantity": -products[slug].qty}})
+            }
+            res.status(200).json({'success': true, 'url': `/order?id=${foundOrder._id}&clearCart=1`})
             return;
+        } catch (error) {
+            return res.status(500).json({'message': "Internal Server Error!"})
         }
-
-        //Check if the data is valid or not
-        if(req.body.phone.length !== 10 || isNaN(req.body.phone)){
-            res.status(200).json({success:false, "error": "Enter a valid phone number"})
-            return;
-        }
-        if(req.body.pincode.length !== 6){
-            res.status(200).json({success:false, "error": "Enter a valid pincode"})
-            return;
-        }
-
-        // Check if the stock is available or not
-
-
-        let order = new Order({
-            email: req.body.email,
-            orderId: req.body.oid,
-            paymentInfo: req.body.paymentInfo,
-            products: req.body.cart,
-            address: req.body.address,
-            phoneno: req.body.phone,
-            state: req.body.state,
-            city: req.body.city,
-            pincode: req.body.pincode,
-            amount: req.body.subTotal,
-            status: 'Pending',
-        })
-        await order.save();
-        let foundOrder = await  Order.findOneAndUpdate({orderId: req.body.oid}, {status: "Paid", paymentInfo: JSON.stringify(req.body)})
-        let products = foundOrder.products
-        for(let slug in products){
-            await Product.findOneAndUpdate({"slug":  slug}, {$inc: {"availableQuantity": -products[slug].qty}})
-        }
-        res.status(200).json({'success': true, 'url': `/order?id=${foundOrder._id}&clearCart=1`})
-        return;
-        // window.location.assign(`/order?id=${foundOrder._id}&clearCart=1`);
     }
 
     var paytmParams = {};

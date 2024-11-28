@@ -8,10 +8,6 @@ const Dashboard = () => {
     const [categories, setCategories] = useState([])
 
     useEffect(() => {
-        let user = JSON.parse(localStorage.getItem("myuser"));
-        if(user.email != 'admin@genzwears.com'){
-            router.push(`${process.env.NEXT_PUBLIC_HOST}`)
-        }
         const getCategories = async () => {
             let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getProductCategories`);
             res = await res.json();

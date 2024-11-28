@@ -104,7 +104,8 @@ export default function App({ Component, pageProps }) {
     saveCart(newCart);
   }
 
-  const logout = ()=>{
+  const logout = async ()=>{
+    const message = await fetch("/api/logout");
     localStorage.removeItem("myuser")
     setKey(Math.random())
     setUser({value: null, email: null})

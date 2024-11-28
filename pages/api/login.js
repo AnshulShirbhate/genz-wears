@@ -4,6 +4,7 @@ var CryptoJS = require("crypto-js");
 var jwt = require('jsonwebtoken');
 
 
+
 const handler = async (req, res) => {
     if(req.method == "POST"){
         let user = await User.findOne({"email":req.body.email})
@@ -12,6 +13,10 @@ const handler = async (req, res) => {
             var password = bytes.toString(CryptoJS.enc.Utf8);
             if(req.body.email === user.email && password === req.body.password){
                 var usertoken = jwt.sign({email: user.email, name: user.name}, process.env.JWT_SECRET, {expiresIn: '2d'});
+                
+                // Set token in the cookies
+                res.setHeader('Set-Cookie', `token=${usertoken}; HttpOnly; Path=/; Max-Age=3600; Secure; SameSite=Strict`);
+
                 res.status(200).json({success: true, token: usertoken, email: user.email});
             }else{
                 res.status(200).json({success: false, error: "Invalid Credentials"});
