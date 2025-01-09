@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server'
 import {parse} from "cookie"
-import getUserFromToken from './middleware/getUserFromToken';
-
+import {jwtVerify} from "jose";
 
 // This function can be marked `async` if using `await` inside
-export function middleware(request) {
+export async function middleware(request) {
     const pathname = request.nextUrl.pathname;
     const isPublicPath = pathname === '/login' || pathname === '/signup'
     const isAdminPath = pathname === '/admin' || pathname === '/admin/(.*)'
@@ -13,7 +12,16 @@ export function middleware(request) {
     const cookies = request.headers.get('cookie') ? parse(request.headers.get('cookie')) : {};
     const token = cookies.token || null;
     
-    // const user = getUserFromToken(token);
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    if(token){
+        try{
+            const {payload} = await jwtVerify(token, secret);
+            const decodedToken  = payload;
+        } catch(e) {
+            console.log("Error: "+e)
+        }
+    }
+    
 
     // if(isAdminPath && user && !user.isAdmin){
     //   return NextResponse.redirect(`${process.env.NEXT_PUBLIC_HOST}/`)
